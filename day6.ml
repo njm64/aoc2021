@@ -7,7 +7,7 @@ let parse_input lines =
     |> String.split ~on:',' 
     |> List.map ~f:(fun s -> (Int.of_string s, 1))
 
-(* Count the total number of fish in a list*)
+(* Count the total number of fish in a list *)
 let count fish = List.map fish ~f:snd |> List.fold ~init:0 ~f:(+)
 
 (* Count the number of fish with a given timer *)
