@@ -7,14 +7,14 @@ let parse_input lines =
     |> String.split ~on:',' 
     |> List.map ~f:(fun s -> (Int.of_string s, 1))
 
+(* Count the total number of fish in a list*)
+let count fish = List.map fish ~f:snd |> List.fold ~init:0 ~f:(+)
+
+(* Count the number of fish with a given timer *)
+let count_time fish t = List.filter fish ~f:(fun (t',_) -> t = t') |> count
+
 (* Group fish with the same timer value together *)
-let group fish = 
-  let count_with_time t =
-    List.filter fish ~f:(fun (t',_) -> t = t')
-    |> List.map ~f:snd
-    |> List.fold ~init:0 ~f:(+)
-  in
-  List.range 0 9 |> List.map ~f:(fun t -> t, count_with_time t)
+let group fish = List.range 0 9 |> List.map ~f:(fun t -> t, count_time fish t)
 
 (* Perform one iteration on a list of fish *)
 let iterate fish =
@@ -22,9 +22,6 @@ let iterate fish =
     match t with
     | (0, count) -> (6, count) :: (8, count) :: acc
     | (t, count) -> ((t - 1), count) :: acc)
-
-(* Count the total number of fish *)
-let count fish = List.map fish ~f:snd |> List.fold ~init:0 ~f:(+)
 
 let run_simulation fish n = 
   let f = Fn.compose iterate group in
