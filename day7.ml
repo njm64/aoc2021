@@ -2,7 +2,6 @@ open Base
 open Stdio
 
 let max_int = List.reduce_exn ~f:Int.max
-let min_int = List.reduce_exn ~f:Int.min
 
 (* Parse input into a list of numbers *)
 let parse_input lines =
@@ -22,19 +21,19 @@ let calc_fuel crabs cost_fn pos =
   |> List.fold ~init:0 ~f:(+)
   
 (* Calculate minimum fuel using a cost function f *)
-let calc_min_fuel positions f =
-  List.range 0 ((max_int positions) + 1)
-    |> List.map ~f:(calc_fuel positions f)
+let calc_min_fuel crabs f =
+  List.range 0 ((max_int crabs) + 1)
+    |> List.map ~f:(calc_fuel crabs f)
     |> List.reduce_exn ~f:Int.min
     |> printf "Fuel: %d\n"
 
 let run () =
-  let positions = In_channel.read_lines "input/day7.txt" |> parse_input in
+  let crabs = In_channel.read_lines "input/day7.txt" |> parse_input in
   
   (* Part 1: Cost is just the identity function *)
-  calc_min_fuel positions Fn.id;
+  calc_min_fuel crabs Fn.id;
 
   (* Part 2: Build a lookup table with fuel costs *)
-  let fuel_table = make_fuel_table (max_int positions) in
-  calc_min_fuel positions (fun n -> fuel_table.(n))
+  let fuel_table = make_fuel_table (max_int crabs) in
+  calc_min_fuel crabs (fun n -> fuel_table.(n))
   
