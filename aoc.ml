@@ -1,2 +1,2 @@
 let () =
-  Day9.run ()
+  Day10.run ()
