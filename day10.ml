@@ -2,14 +2,14 @@ open Base
 open Stdio
 
 type result =
-  | Ok of char list
+  | Ok 
   | UnexpectedToken of char
   | UnterminatedExpr of char list
 
 let rec parse_expr lst tags =
   match (lst, tags) with
   (* No more tokens, and an empty tag stack *)
-  | [], [] -> Ok []
+  | [], [] -> Ok 
   (* No more tokens, but there are still unclosed tags in the stack *)
   | [], tags -> UnterminatedExpr tags
   (* Open an expression. Just add the closing tag to the tag stack and
