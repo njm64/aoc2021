@@ -34,16 +34,16 @@ let parse_input lines =
   in
   (points, List.rev folds)
 
+(* Apply a fold to a single point *)
+let fold_point fold p =
+  match fold with
+  | Vertical n -> if p.x > n then { p with x = n - (p.x - n) } else p
+  | Horizontal n -> if p.y > n then { p with y = n - (p.y - n) } else p
+
 (* Apply a fold to a list of points *)
 let fold_points points fold =
-  let f =
-    match fold with
-    | Vertical n ->
-        fun { x; y } -> if x > n then { x = n - (x - n); y } else { x; y }
-    | Horizontal n ->
-        fun { x; y } -> if y > n then { x; y = n - (y - n) } else { x; y }
-  in
-  List.map points ~f |> List.dedup_and_sort ~compare:compare_point
+  List.map points ~f:(fold_point fold)
+  |> List.dedup_and_sort ~compare:compare_point
 
 (* Plot points to the screen. Note arguments to make_matrix are
    inverted, so we can easily print it a row at a time. *)
