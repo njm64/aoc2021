@@ -46,34 +46,37 @@ let rec apply_rules rules pair_frequencies =
       | None -> failwith "Insertion rule not found")
 
 (* Given a list of pair frequencies, return the characters with
-   the minimum and maximum counts. We include the count of the first
-   character in every pair, and the count of the second character in
-   the last pair only. *)
+   the minimum and maximum counts. We include the count of the second
+   character in every pair, and the count of the first character in
+   the first pair only. *)
 let get_element_counts pair_frequencies =
   let count_fst (pair, count) = (fst pair, count) in
   let count_snd (pair, count) = (snd pair, count) in
-  List.map pair_frequencies ~f:count_fst
-  |> List.cons (List.last_exn pair_frequencies |> count_snd)
-  |> simplify_frequency_list
-  |> List.sort ~compare:(fun a b -> Int.compare (snd a) (snd b))
-  |> fun lst -> (List.hd_exn lst |> snd, List.last_exn lst |> snd)
+  List.map pair_frequencies ~f:count_snd
+  |> List.cons (List.hd_exn pair_frequencies |> count_fst)
+  |> simplify_frequency_list |> List.map ~f:snd
+  |> List.sort ~compare:Int.compare
+  |> fun lst -> (List.hd_exn lst, List.last_exn lst)
 
-(* Simplify a list of pair frequencies. Need to make sure the last pair is not
-   simplified because the ordering is important (i.e. we count the second element
-   of the last pair). So remove it before simplifying, and re-add it afterwards. *)
+(* Simplify a list of pair frequencies. Need to make sure the first pair is
+   not simplified because the ordering is important (i.e. we count both
+   elements of the first pair). So remove it before simplifying, and re-add
+   it afterwards. *)
 let simplify pair_frequencies =
-  match List.rev pair_frequencies with
-  | hd :: tl -> List.rev (hd :: simplify_frequency_list tl)
+  match pair_frequencies with
+  | hd :: tl -> hd :: simplify_frequency_list tl
   | [] -> []
 
-(* Perform one iteration of the pair insertion process, first applying the insertion
-   rules, and then simplifying the frequency list. *)
+(* Perform one iteration of the pair insertion process, first applying the
+   insertion rules, and then simplifying the frequency list. *)
 let iterate rules lst = apply_rules rules lst |> simplify
 
 (* Run n iterations, and return the difference between the max & min element *)
 let run_iterations pf rules n =
-  let min, max = Fn.apply_n_times ~n (iterate rules) pf |> get_element_counts in
-  max - min
+  let min_count, max_count =
+    Fn.apply_n_times ~n (iterate rules) pf |> get_element_counts
+  in
+  max_count - min_count
 
 let run () =
   let polymer, rules = In_channel.read_lines "input/day14.txt" |> parse_input in
