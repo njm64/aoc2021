@@ -1,5 +1,5 @@
 (executable
  (name aoc)
- (libraries core stdio)
+ (libraries base stdio)
  (preprocess
   (pps ppx_compare ppx_let)))
