@@ -59,7 +59,7 @@ let run_cmds cmds =
   let xs = Array.length x_axis in
   let ys = Array.length y_axis in
   let zs = Array.length z_axis in
-  let reactor = Bytes.make (xs * ys * zs) '.' in
+  let reactor = Bytes.make (xs * ys * zs) status_off in
   let count = ref 0 in
 
   List.iter cmds ~f:(fun cmd ->
