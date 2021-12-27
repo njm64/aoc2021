@@ -3,4 +3,5 @@ module-item-spacing = compact
 break-cases = fit-or-vertical
 doc-comments = before
 dock-collection-brackets = true
+exp-grouping = preserve
 
