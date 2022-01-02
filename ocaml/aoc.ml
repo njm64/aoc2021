@@ -42,7 +42,7 @@ let run_day d =
   match module_for_day d with
   | Some m ->
       let module M = (val m : Day) in
-      let filename = Printf.sprintf "input/day%d.txt" d in
+      let filename = Printf.sprintf "../input/day%d.txt" d in
       let input = In_channel.read_lines filename |> M.parse_input in
       for i = 1 to 2 do
         let start = Caml.Sys.time () in
