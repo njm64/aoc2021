@@ -1,5 +1,6 @@
 open Base
-open Stdio
+
+type input = char array array
 
 let parse_input lines = List.map lines ~f:String.to_array |> List.to_array
 
@@ -28,7 +29,5 @@ let rec iterate map count =
   let m = map |> move '>' (1, 0) |> move 'v' (0, 1) in
   if String.equal (map_to_string m) s then count + 1 else iterate m (count + 1)
 
-let run () =
-  let map = In_channel.read_lines "input/day25.txt" |> parse_input in
-  let count = iterate map 0 in
-  printf "Count %d\n" count
+let part1 map = iterate map 0
+let part2 _ = 0

@@ -1,11 +1,12 @@
 open Base
-open Stdio
 
 (* One node in the expression tree *)
 type node =
   | Regular of int
   | Pair of node * node
 [@@deriving compare]
+
+type input = node list
 
 (* Convert a node to a string, for debugging *)
 let rec node_to_string node =
@@ -207,7 +208,5 @@ let max_magnitude numbers =
             max := Int.max !max mag));
   !max
 
-let run () =
-  let numbers = In_channel.read_lines "input/day18.txt" |> parse_input in
-  printf "Magnitude %d\n" (add_numbers numbers |> magnitude);
-  printf "Max magnitude %d\n" (max_magnitude numbers)
+let part1 numbers = add_numbers numbers |> magnitude
+let part2 numbers = max_magnitude numbers

@@ -1,2 +1,2 @@
 #!/bin/sh
-dune exec ./aoc.exe
+dune exec ./aoc.exe $*

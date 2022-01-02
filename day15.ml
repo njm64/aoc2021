@@ -1,7 +1,6 @@
 open Base
-open Stdio
 
-type cave = {
+type input = {
   risks : int array;
   width : int;
   height : int;
@@ -9,7 +8,7 @@ type cave = {
 
 let parse_line s = String.to_array s |> Array.map ~f:Char.get_digit_exn
 
-let parse_cave lines =
+let parse_input lines =
   let rows = List.map lines ~f:parse_line in
   let risks = Array.concat rows in
   let width = Array.length (List.hd_exn rows) in
@@ -99,7 +98,5 @@ let run_with_cave cave =
   let map = Map.empty (module Int) in
   find_path cave goal { pos = 0; risk = 0; map; queue }
 
-let run () =
-  let cave = In_channel.read_lines "input/day15.txt" |> parse_cave in
-  printf "Part1: %d\n" (run_with_cave cave);
-  printf "Part2: %d\n" (run_with_cave (expand_cave cave))
+let part1 cave = run_with_cave cave
+let part2 cave = run_with_cave (expand_cave cave)

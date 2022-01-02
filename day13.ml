@@ -11,6 +11,8 @@ type point = {
 }
 [@@deriving compare]
 
+type input = point list * fold list
+
 (* Parse a fold command *)
 let parse_fold line =
   match String.lsplit2_exn line ~on:'=' with
@@ -57,12 +59,12 @@ let plot_points points =
     printf "%s\n" (arr.(y) |> Array.to_list |> String.of_char_list)
   done
 
-let run () =
-  let points, folds = In_channel.read_lines "input/day13.txt" |> parse_input in
+let part1 (points, folds) =
+  List.hd_exn folds |> fold_points points |> List.length
 
-  let part1 = List.hd_exn folds |> fold_points points |> List.length in
-  printf "Part 1: %d\n" part1;
-
-  let part2 = List.fold folds ~init:points ~f:fold_points in
-  printf "Part 2:\n";
-  plot_points part2
+let part2 (points, folds) =
+  let points = List.fold folds ~init:points ~f:fold_points in
+  plot_points points;
+  (* This is the only case where we can't return the result as
+     an integer, so just print it and return 0 *)
+  0

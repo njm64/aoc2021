@@ -1,5 +1,6 @@
 open Base
-open Stdio
+
+type input = bytes
 
 type packet =
   | Literal of int
@@ -124,13 +125,5 @@ and parse_pair r =
   | [ a; b ] -> (a, b)
   | _ -> failwith "Expected 2 packets"
 
-let run () =
-  let buf = In_channel.read_lines "input/day16.txt" |> parse_input in
-
-  (* Part 1 *)
-  let vs = reader_of_buf buf |> get_version_sum in
-  printf "Version sum: %d\n" vs;
-
-  (* Part 2 *)
-  let value = reader_of_buf buf |> parse_packet |> eval in
-  printf "Value: %d\n" value
+let part1 buf = reader_of_buf buf |> get_version_sum
+let part2 buf = reader_of_buf buf |> parse_packet |> eval
