@@ -1,5 +1,4 @@
 open Base
-open Stdio
 
 type pos = {
   row : int;
@@ -21,6 +20,8 @@ type amphipod = {
   kind : char;
   pos : pos;
 }
+
+type input = amphipod list
 
 type state = {
   metrics : metrics;
@@ -268,18 +269,13 @@ let adjust_input_for_phase2 amphipods =
       if a.pos.row = 2 then { a with pos = { a.pos with row = 4 } } else a)
   @ extra
 
-let run_phase1 amphipods =
+let part1 amphipods =
   let metrics = init_metrics 1 in
   let map = build_map metrics amphipods in
   find_solution { amphipods; metrics; map; energy = 0 }
 
-let run_phase2 amphipods =
+let part2 amphipods =
   let amphipods = adjust_input_for_phase2 amphipods in
   let metrics = init_metrics 2 in
   let map = build_map metrics amphipods in
   find_solution { amphipods; metrics; map; energy = 0 }
-
-let run () =
-  let amphipods = In_channel.read_lines "input/day23.txt" |> parse_input in
-  printf "Phase 1: %d\n" (run_phase1 amphipods);
-  printf "Phase 2: %d\n" (run_phase2 amphipods)

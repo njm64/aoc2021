@@ -1,5 +1,4 @@
 open Base
-open Stdio
 
 type point = {
   x : int;
@@ -12,6 +11,8 @@ type scanner = {
   id : int;
   points : point list;
 }
+
+type input = scanner list
 
 type axis =
   | PositiveX
@@ -137,10 +138,10 @@ let resolve_scanners resolved unresolved =
    and unresolved ones. Each iteration, we try to resolve the unresolved
    scanners against the newly resolved ones. *)
 let rec resolve_loop resolved newly_resolved unresolved =
-  printf "Resolved %d Newly resolved: %d Unresolved: %d\n%!"
+  (*printf "Resolved %d Newly resolved: %d Unresolved: %d\n%!"
     (List.length resolved)
     (List.length newly_resolved)
-    (List.length unresolved);
+    (List.length unresolved);*)
   let succeeded, failed = resolve_scanners newly_resolved unresolved in
   if List.length succeeded = 0 then failwith "Failed to resolve"
   else if List.length failed = 0 then
@@ -184,8 +185,13 @@ let max_manhattan_distance points =
           max := Int.max d !max));
   !max
 
-let run () =
-  let scanners = In_channel.read_lines "input/day19.txt" |> parse_input in
+let cached_scanner_positions = ref []
+
+let part1 scanners =
   let beacon_positions, scanner_positions = find_all scanners in
-  printf "Unique beacons: %d\n" (List.length beacon_positions);
-  printf "Maximum distance: %d\n" (max_manhattan_distance scanner_positions)
+  (* Cheat a bit and save the scanner positions for part 2, because
+     this is a bit slow to calculate *)
+  cached_scanner_positions := scanner_positions;
+  List.length beacon_positions
+
+let part2 _ = max_manhattan_distance !cached_scanner_positions

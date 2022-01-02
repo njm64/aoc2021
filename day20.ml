@@ -1,5 +1,4 @@
 open Base
-open Stdio
 
 type image = {
   width : int;
@@ -7,6 +6,8 @@ type image = {
   pixels : char array array;
   background : char;
 }
+
+type input = string * image
 
 let parse_input lines =
   let l1, l2 = List.split_while lines ~f:(Fn.non String.is_empty) in
@@ -65,7 +66,5 @@ let count_pixels img =
 let run_iterations iea img n =
   Fn.apply_n_times ~n (enhance iea) img |> count_pixels
 
-let run () =
-  let iea, img = In_channel.read_lines "input/day20.txt" |> parse_input in
-  printf "Part 1: %d\n" (run_iterations iea img 2);
-  printf "Part 2: %d\n" (run_iterations iea img 50)
+let part1 (iea, img) = run_iterations iea img 2
+let part2 (iea, img) = run_iterations iea img 50

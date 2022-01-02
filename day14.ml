@@ -1,5 +1,6 @@
 open Base
-open Stdio
+
+type input = string * (char * char, char) Base.Map.Poly.t
 
 (* Parse a rule into a tuple of the form ((A, B), C) *)
 let parse_rule line =
@@ -78,8 +79,10 @@ let run_iterations pf rules n =
   in
   max_count - min_count
 
-let run () =
-  let polymer, rules = In_channel.read_lines "input/day14.txt" |> parse_input in
+let part1 (polymer, rules) =
   let pair_frequencies = polymer_to_pair_frequencies polymer in
-  printf "Part 1: %d\n" (run_iterations pair_frequencies rules 10);
-  printf "Part 2: %d\n" (run_iterations pair_frequencies rules 40)
+  run_iterations pair_frequencies rules 10
+
+let part2 (polymer, rules) =
+  let pair_frequencies = polymer_to_pair_frequencies polymer in
+  run_iterations pair_frequencies rules 40

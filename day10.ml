@@ -1,15 +1,16 @@
 open Base
-open Stdio
 
 type result =
-  | Ok 
+  | Ok
   | UnexpectedToken of char
   | UnterminatedExpr of char list
+
+type input = result list
 
 let rec parse_expr lst tags =
   match (lst, tags) with
   (* No more tokens, and an empty tag stack *)
-  | [], [] -> Ok 
+  | [], [] -> Ok
   (* No more tokens, but there are still unclosed tags in the stack *)
   | [], tags -> UnterminatedExpr tags
   (* Open an expression. Just add the closing tag to the tag stack and
@@ -22,8 +23,7 @@ let rec parse_expr lst tags =
   | hd :: _, [] -> UnexpectedToken hd
   (* Got a token, check it matches the top one on the tag stack *)
   | hd :: tl, hd_tag :: tl_tags ->
-      if Char.equal hd hd_tag then parse_expr tl tl_tags 
-      else UnexpectedToken hd
+      if Char.equal hd hd_tag then parse_expr tl tl_tags else UnexpectedToken hd
 
 let parse_line s = parse_expr (String.to_list s) []
 let parse_input lines = List.map lines ~f:parse_line
@@ -44,7 +44,8 @@ let autocomplete_token_score = function
 
 let autocomplete_score = function
   | UnterminatedExpr tags ->
-      Some (List.fold_left tags ~init:0 ~f:(fun acc c ->
+      Some
+        (List.fold_left tags ~init:0 ~f:(fun acc c ->
              (acc * 5) + autocomplete_token_score c))
   | _ -> None
 
@@ -52,14 +53,10 @@ let middle lst =
   let n = List.length lst in
   List.nth lst (n / 2) |> Option.value_exn
 
-let run () =
-  let results = In_channel.read_lines "input/day10.txt" |> parse_input in
+let part1 results =
+  List.map results ~f:unexpected_token_score |> List.fold_left ~init:0 ~f:( + )
 
-  List.map results ~f:unexpected_token_score
-  |> List.fold_left ~init:0 ~f:( + )
-  |> printf "Part1: %d\n";
-
+let part2 results =
   List.filter_map results ~f:autocomplete_score
   |> List.sort ~compare:Int.compare
-  |> middle 
-  |> printf "Part2: %d\n"
+  |> middle

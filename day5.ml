@@ -3,8 +3,12 @@ open Stdio
 
 let map_size = 1000
 
+type input = (int * int * int * int) list
+
 let parse_cmd s =
   Caml.Scanf.sscanf s "%d,%d -> %d,%d" (fun x1 y1 x2 y2 -> (x1, y1, x2, y2))
+
+let parse_input lines = List.map lines ~f:parse_cmd
 
 let draw_point m x y =
   let i = (y * map_size) + x in
@@ -44,11 +48,7 @@ let print_map m =
 let run_cmds cmds ~allow_diagonal =
   let m = Array.create ~len:(map_size * map_size) 0 in
   List.iter cmds ~f:(draw_line ~allow_diagonal m);
-  let count = Array.count m ~f:(fun n -> n >= 2) in
-  printf "Count: %d\n" count;
-  printf "\n"
+  Array.count m ~f:(fun n -> n >= 2)
 
-let run () =
-  let cmds = In_channel.read_lines "input/day5.txt" |> List.map ~f:parse_cmd in
-  run_cmds cmds ~allow_diagonal:false;
-  run_cmds cmds ~allow_diagonal:true
+let part1 cmds = run_cmds cmds ~allow_diagonal:false
+let part2 cmds = run_cmds cmds ~allow_diagonal:true

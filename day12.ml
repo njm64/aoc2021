@@ -1,10 +1,11 @@
 open Base
-open Stdio
+
+type input = (string, string list, Base.String.comparator_witness) Base.Map.t
 
 (* Build a graph from the input data, represented as a map from source
    node to a list of connected destination nodes. Add all links in both
    directions. *)
-let build_graph lines =
+let parse_input lines =
   let m = Map.empty (module String) in
   List.fold_left lines ~init:m ~f:(fun m line ->
       let a, b = String.lsplit2_exn line ~on:'-' in
@@ -45,14 +46,14 @@ let rec find_paths graph src visit_count_map max_dups =
     |> List.concat
     |> List.map ~f:(List.cons src)
 
-let run () =
-  let graph = In_channel.read_lines "input/day12.txt" |> build_graph in
+(* Part 1: No duplicate visits to small caves allowed *)
+let part1 graph =
   let m = Map.empty (module String) in
+  let paths = find_paths graph "start" m 0 in
+  List.length paths
 
-  (* Part 1: No duplicate visits to small caves allowed *)
-  let paths1 = find_paths graph "start" m 0 in
-  printf "Part1: %d\n" (List.length paths1);
-
-  (* Part 2: 1 duplicate visit to a small cave allowed *)
-  let paths2 = find_paths graph "start" m 1 in
-  printf "Part2: %d\n" (List.length paths2)
+(* Part 2: 1 duplicate visit to a small cave allowed *)
+let part2 graph =
+  let m = Map.empty (module String) in
+  let paths = find_paths graph "start" m 1 in
+  List.length paths

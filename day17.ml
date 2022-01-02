@@ -1,5 +1,4 @@
 open Base
-open Stdio
 
 type result =
   | Hit of int
@@ -10,7 +9,7 @@ type point = {
   y : int;
 }
 
-type target = {
+type input = {
   min : point;
   max : point;
 }
@@ -59,8 +58,10 @@ let parse_input lines =
   sscanf line "target area: x=%d..%d, y=%d..%d" (fun x1 x2 y1 y2 ->
       { min = { x = x1; y = y1 }; max = { x = x2; y = y2 } })
 
-let run () =
-  let target = In_channel.read_lines "input/day17.txt" |> parse_input in
-  let max_height, hit_count = find_hits target in
-  printf "Max height: %d\n" max_height;
-  printf "Hit count: %d\n" hit_count
+let part1 target =
+  let hit_count, _ = find_hits target in
+  hit_count
+
+let part2 target =
+  let _, max_height = find_hits target in
+  max_height

@@ -1,5 +1,4 @@
 open Base
-open Stdio
 
 (* Current state for one player *)
 type player = {
@@ -10,7 +9,7 @@ type player = {
 
 (* Universe state is represented as (active_player, other_player),
    where active_player is the next player to roll. *)
-type universe = player * player
+type input = player * player
 
 (* Parse input and return a universe *)
 let parse_input input =
@@ -35,15 +34,6 @@ let update_universe universe roll =
   let pos = ((active.pos + roll - 1) % 10) + 1 in
   let score = active.score + pos in
   (inactive, { id = active.id; pos; score })
-
-let rec run_part1 universe roll_count =
-  let d1 = (roll_count % 100) + 1 in
-  let d2 = (roll_count % 100) + 2 in
-  let d3 = (roll_count % 100) + 3 in
-  let u = update_universe universe (d1 + d2 + d3) in
-  let active, inactive = u in
-  if inactive.score >= 1000 then (roll_count + 3) * active.score
-  else run_part1 u (roll_count + 3)
 
 (* Calculate all possible dice totals *)
 let dice_totals =
@@ -93,11 +83,20 @@ let count_wins universes id =
   |> List.map ~f:snd
   |> List.fold_left ~f:( + ) ~init:0
 
-let run () =
-  let universe = In_channel.read_lines "input/day21.txt" |> parse_input in
-  let part1 = run_part1 universe 0 in
-  printf "Part 1: %d\n" part1;
+let part1 universe =
+  let rec step universe roll_count =
+    let d1 = (roll_count % 100) + 1 in
+    let d2 = (roll_count % 100) + 2 in
+    let d3 = (roll_count % 100) + 3 in
+    let u = update_universe universe (d1 + d2 + d3) in
+    let active, inactive = u in
+    if inactive.score >= 1000 then (roll_count + 3) * active.score
+    else step u (roll_count + 3)
+  in
+  step universe 0
+
+let part2 universe =
   let universes = run_part2 [ (universe, 1) ] in
   let count1 = count_wins universes 1 in
   let count2 = count_wins universes 2 in
-  printf "Part 2: %d\n" (max count1 count2)
+  max count1 count2

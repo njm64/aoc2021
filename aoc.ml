@@ -1,8 +1,12 @@
-open Stdio
 open Base
+open Stdio
 
 module type Day = sig
-  val run : unit -> unit
+  type input
+
+  val parse_input : string list -> input
+  val part1 : input -> int
+  val part2 : input -> int
 end
 
 let module_for_day d =
@@ -38,8 +42,15 @@ let run_day d =
   match module_for_day d with
   | Some m ->
       let module M = (val m : Day) in
-      printf "Running day %d\n" d;
-      M.run ()
+      let filename = Printf.sprintf "input/day%d.txt" d in
+      let input = In_channel.read_lines filename |> M.parse_input in
+      for i = 1 to 2 do
+        let start = Caml.Sys.time () in
+        let f = if i = 1 then M.part1 else M.part2 in
+        let result = f input in
+        let elapsed = Caml.Sys.time () -. start in
+        printf "Day %02d Part %d: %-20d %fs\n%!" d i result elapsed
+      done
   | None -> printf "No module for day %d\n" d
 
 let () =

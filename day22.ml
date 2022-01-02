@@ -1,5 +1,4 @@
 open Base
-open Stdio
 open Caml.Scanf
 
 (* Range from inclusive min to exclusive max *)
@@ -18,6 +17,8 @@ type cmd = {
   status : char;
   cube : cube;
 }
+
+type input = cmd list
 
 let status_on = Char.of_int_exn 1
 let status_off = Char.of_int_exn 0
@@ -89,12 +90,5 @@ let run_cmds cmds =
   done;
   !count
 
-let run () =
-  let cmds = In_channel.read_lines "input/day22.txt" |> parse_input in
-
-  let init_cmds = List.filter ~f:in_init_region cmds in
-  let count1 = run_cmds init_cmds in
-  printf "Part 1: %d\n" count1;
-
-  let count2 = run_cmds cmds in
-  printf "Part 2: %d\n" count2
+let part1 cmds = List.filter ~f:in_init_region cmds |> run_cmds
+let part2 cmds = run_cmds cmds

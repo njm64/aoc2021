@@ -1,5 +1,6 @@
 open Base
-open Stdio
+
+type input = (string list * string list) list
 
 (* Parse each line into a tuple of two lists *)
 let parse_line s =
@@ -32,8 +33,7 @@ let rec permutations lst =
 (* Generate all possible keys  *)
 let all_keys =
   [ "a"; "b"; "c"; "d"; "e"; "f"; "g" ]
-  |> permutations 
-  |> List.map ~f:String.concat
+  |> permutations |> List.map ~f:String.concat
 
 (* Convert a code to a digit. Assumes the code is sorted. *)
 let code_to_digit = function
@@ -52,8 +52,7 @@ let code_to_digit = function
 (* Decode a code using the given key *)
 let decode key code =
   let f c = String.get key (Char.to_int c - Char.to_int 'a') in
-  String.map code ~f 
-  |> String.to_list
+  String.map code ~f |> String.to_list
   |> List.sort ~compare:Char.compare
   |> String.of_char_list |> code_to_digit
 
@@ -70,18 +69,12 @@ let find_key codes =
    the digits on the right hand side. *)
 let decode_record (a, b) =
   let key = find_key a in
-  List.map b ~f:(decode key) 
-  |> String.of_char_list 
-  |> Int.of_string
+  List.map b ~f:(decode key) |> String.of_char_list |> Int.of_string
 
-let run () =
-  let records = In_channel.read_lines "input/day8.txt" |> parse_input in
-  let sum_list = List.reduce_exn ~f:( + ) in
+let sum_list = List.reduce_exn ~f:( + )
 
-  (* Part 1: Just count the codes with unique segment counts *)
-  let part1 = List.map records ~f:count_unique |> sum_list in
-  printf "Part 1: %d\n" part1;
+(* Part 1: Just count the codes with unique segment counts *)
+let part1 records = List.map records ~f:count_unique |> sum_list
 
-  (* Part 2: Decode all records, and find the sum *)
-  let part2 = List.map records ~f:decode_record |> sum_list in
-  printf "Part 2: %d\n" part2
+(* Part 2: Decode all records, and find the sum *)
+let part2 records = List.map records ~f:decode_record |> sum_list

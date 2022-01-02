@@ -1,5 +1,4 @@
 open Base
-open Stdio
 
 (* After disassembling the input, it seems that the program consists of 18
    instructions per digit. The code for each digit looks something like this,
@@ -34,6 +33,8 @@ type opcode =
   | Div of register * operand
   | Mod of register * operand
   | Eql of register * operand
+
+type input = opcode list
 
 type alu = {
   input : int list;
@@ -143,15 +144,19 @@ let calc instructions zsets criteria =
   in
   step 0 0 0
 
-let run () =
-  let instructions = In_channel.read_lines "input/day24.txt" |> parse_input in
-
-  (* Calculate the set of valid Z input values for each phase *)
+(* Calculate the set of valid Z input values for each phase *)
+let calc_zsets instructions =
   let zsets = Array.create ~len:14 (Set.empty (module Int)) in
   zsets.(13) <- Set.of_list (module Int) [ 0 ];
   for i = 12 downto 0 do
     zsets.(i) <- calc_zs instructions (i + 1) zsets.(i + 1)
   done;
+  zsets
 
-  printf "Part 1: %d\n" (calc instructions zsets `highest);
-  printf "Part 2: %d\n" (calc instructions zsets `lowest)
+let part1 instructions =
+  let zsets = calc_zsets instructions in
+  calc instructions zsets `highest
+
+let part2 instructions =
+  let zsets = calc_zsets instructions in
+  calc instructions zsets `lowest
