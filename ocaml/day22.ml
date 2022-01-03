@@ -76,15 +76,16 @@ let run_cmds cmds =
         done
       done);
 
-  for x = 0 to xs - 1 do
+  let i = ref 0 in
+  for z = 0 to zs - 1 do
     for y = 0 to ys - 1 do
-      for z = 0 to zs - 1 do
-        let i = x + (y * xs) + (z * xs * ys) in
-        if Char.equal (Bytes.get reactor i) status_on then
-          let x = x_axis.(x + 1) - x_axis.(x) in
-          let y = y_axis.(y + 1) - y_axis.(y) in
-          let z = z_axis.(z + 1) - z_axis.(z) in
-          count := !count + (x * y * z)
+      for x = 0 to xs - 1 do
+        (if Char.equal (Bytes.unsafe_get reactor !i) status_on then
+         let x = x_axis.(x + 1) - x_axis.(x) in
+         let y = y_axis.(y + 1) - y_axis.(y) in
+         let z = z_axis.(z + 1) - z_axis.(z) in
+         count := !count + (x * y * z));
+        i := !i + 1
       done
     done
   done;
