@@ -76,6 +76,9 @@ let point_to_scalar axis p =
   | PositiveZ -> p.z
   | NegativeZ -> -p.z
 
+let sorted_scalars s axis =
+  List.map s.points ~f:(point_to_scalar axis) |> List.sort ~compare:Int.compare
+
 let apply_mapping p m =
   {
     x = point_to_scalar m.xmap.axis p + m.xmap.offset;
@@ -85,24 +88,32 @@ let apply_mapping p m =
 
 let apply_mappings p m = List.fold_left m ~init:p ~f:apply_mapping
 
-(* Attempt to match two scanners with given axes and an offset *)
-let match_scanners a b axis_a axis_b offset =
-  let list_a = List.map a.points ~f:(point_to_scalar axis_a) in
-  let list_b =
-    List.map b.points ~f:(fun p -> point_to_scalar axis_b p + offset)
-  in
-  let set_a = Set.of_list (module Int) list_a in
-  let set_b = Set.of_list (module Int) list_b in
-  let count = Set.inter set_a set_b |> Set.length in
-  count >= 10
+(* Given two sorted lists of scalars, return true if we can find
+   at least n matches, after applying the given offset to list b.
+   This is much faster than our original approach, which was to
+   build a new list for each offset, and use set intersections
+   to find matching elements. *)
+let rec match_scalars a b offset n =
+  if n = 0 then true
+  else
+    match (a, b) with
+    | [], _ -> false
+    | _, [] -> false
+    | hd_a :: tl_a, hd_b :: tl_b ->
+        let diff = hd_a - (hd_b + offset) in
+        if diff < 0 then match_scalars tl_a b offset n
+        else if diff > 0 then match_scalars a tl_b offset n
+        else match_scalars tl_a tl_b offset (n - 1)
 
 (* Attempt to match scanner a on axis_a against scanner b.
    If successful, returns the axis and offset for scanner b *)
 let attempt_match a b axis_a =
+  let list_a = sorted_scalars a axis_a in
   With_return.with_return (fun r ->
       List.iter all_axes ~f:(fun axis_b ->
+          let list_b = sorted_scalars b axis_b in
           for offset = -2000 to 2000 do
-            if match_scanners a b axis_a axis_b offset then
+            if match_scalars list_a list_b offset 12 then
               r.return (Some { axis = axis_b; offset })
           done);
       None)
@@ -138,7 +149,7 @@ let resolve_scanners resolved unresolved =
    and unresolved ones. Each iteration, we try to resolve the unresolved
    scanners against the newly resolved ones. *)
 let rec resolve_loop resolved newly_resolved unresolved =
-  (*printf "Resolved %d Newly resolved: %d Unresolved: %d\n%!"
+  (*Stdio.printf "Resolved %d Newly resolved: %d Unresolved: %d\n%!"
     (List.length resolved)
     (List.length newly_resolved)
     (List.length unresolved);*)
