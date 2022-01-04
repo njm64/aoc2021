@@ -1,6 +1,6 @@
 (defpackage :day2
   (:use :cl :trivia)
-  (:export :run))
+  (:export :parse-input :part1 :part2))
 
 (in-package :day2)
 
@@ -31,7 +31,7 @@
   (let ((r (reduce f cmds :initial-value state)))
     (* (first r) (second r))))
 
-(defun run ()
-  (let ((cmds (parse-input (util:read-input "day2"))))
-    (format t "Part 1: ~a~%" (run-cmds cmds #'apply-cmd '(0 0)))
-    (format t "Part 2: ~a~%" (run-cmds cmds #'apply-cmd2 '(0 0 0)))))
+(defun part1 (cmds) (run-cmds cmds #'apply-cmd '(0 0)))
+(defun part2 (cmds) (run-cmds cmds #'apply-cmd2 '(0 0 0)))
+
+

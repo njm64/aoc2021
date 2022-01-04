@@ -1,6 +1,6 @@
 (defpackage :day4
   (:use :alexandria :cl :split-sequence)
-  (:export :run)
+  (:export :parse-input :part1 :part2)
   (:shadowing-import-from :arrow-macros :->>))
 
 (in-package :day4)
@@ -38,15 +38,16 @@
       (when (loop for x from 0 below w never (aref board y x))
         (return-from is-complete t)))))
 
-(defun find-bingos (numbers boards)
-  (loop
-    for n in numbers while boards with completed
-    finally (return (nreverse completed)) do
-      (loop for b in boards do            
-        (mark-board b n)
-        (when (is-complete b)
-          (push (list b n) completed)))
-      (setf boards (remove-if #'check-bingo boards))))
+(defun find-bingos (numbers boards-in)
+  (let ((boards (mapcar #'copy-array boards-in)))
+    (loop
+      for n in numbers while boards with completed
+      finally (return (nreverse completed)) do
+        (loop for b in boards do            
+          (mark-board b n)
+          (when (is-complete b)
+            (push (list b n) completed)))
+        (setf boards (remove-if #'is-complete boards)))))
 
 (defun calc-score (board num)
   (destructuring-bind (h w) (array-dimensions board)
@@ -57,10 +58,12 @@
             (setf sum (+ sum n)))))
       (* sum num))))
 
-(defun run ()
-  (let* ((input (parse-input (util:read-input "day4")))
-         (numbers (first input))
-         (boards (second input))
-         (results (find-bingos numbers boards)))
-    (format t "Part 1: ~a~%" (apply #'calc-score (first results)))
-    (format t "Part 2: ~a~%" (apply #'calc-score (lastcar results)))))
+(defun part1 (input)
+  (destructuring-bind (numbers boards) input
+    (apply #'calc-score (first (find-bingos numbers boards)))))
+
+(defun part2 (input)
+  (destructuring-bind (numbers boards) input
+    (apply #'calc-score (lastcar (find-bingos numbers boards)))))
+
+

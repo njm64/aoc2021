@@ -8,9 +8,12 @@
                :arrow-macros
                :cl-ppcre
                :metabang-bind)
-  :components ((:file "day1" :depends-on ("util"))
+  :components (
+               (:file "aoc")
+               (:file "util")
+               (:file "day1" :depends-on ("util"))
                (:file "day2" :depends-on ("util"))
                (:file "day3" :depends-on ("util"))
                (:file "day4" :depends-on ("util"))
                (:file "day5" :depends-on ("util"))
-               (:file "util")))
+               (:file "day6" :depends-on ("util"))))
