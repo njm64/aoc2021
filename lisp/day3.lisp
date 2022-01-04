@@ -1,6 +1,6 @@
 (defpackage :day3
   (:use :cl :trivia)
-  (:export :run))
+  (:export :parse-input :part1 :part2))
 
 (in-package :day3)
 
@@ -49,11 +49,6 @@
            (when (= (length lst) 1)
              (return (bin->int (first lst))))))
 
-(defun run ()
-  (let* ((input (util:read-input "day3"))      
-         (gamma (calc-gamma input))
-         (epsilon (calc-epsilon input))
-         (oxygen (calc-oxygen input))
-         (co2 (calc-co2 input)))
-    (format t "Part 1: ~d~%" (* gamma epsilon))
-    (format t "Part 2: ~d~%" (* oxygen co2))))
+(defun parse-input (input) input)
+(defun part1 (input) (* (calc-gamma input) (calc-epsilon input)))
+(defun part2 (input) (* (calc-oxygen input) (calc-co2 input)))

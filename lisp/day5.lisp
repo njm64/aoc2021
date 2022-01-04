@@ -1,6 +1,6 @@
 (defpackage :day5
   (:use :cl) 
-  (:export :run))
+  (:export :parse-input :part1 :part2]))
 
 (in-package :day5)
 
@@ -54,9 +54,6 @@
         (allow-diagonal (draw-diagonal m x1 y1 x2 y2))))
     (count-map m)))
 
-(defun run ()
-  (let* ((cmds (parse-input (util:read-input "day5"))))
-    (format t "Part 1: ~a~%" (run-cmds cmds))
-    (format t "Part 2: ~a~%" (run-cmds cmds :allow-diagonal t))))
-
+(defun part1 (cmds) (run-cmds cmds))
+(defun part2 (cmds) (run-cmds cmds :allow-diagonal t))
 
