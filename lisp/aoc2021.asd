@@ -17,4 +17,5 @@
                (:file "day4" :depends-on ("util"))
                (:file "day5" :depends-on ("util"))
                (:file "day6" :depends-on ("util"))
-               (:file "day7" :depends-on ("util"))))
+               (:file "day7" :depends-on ("util"))
+               (:file "day8" :depends-on ("util"))))
