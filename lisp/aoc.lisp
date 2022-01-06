@@ -1,6 +1,6 @@
 (defpackage :aoc
   (:use :cl)
-  (:export :run-day :run-all))
+  (:export :run :run-all))
 
 (in-package :aoc)
 
@@ -14,7 +14,7 @@
          (elapsed (/ (- t2 t1) internal-time-units-per-second)))
     (format t "Day ~2d Part ~d: ~20@<~d~> ~,6fs~%" d p result elapsed)))
 
-(defun run-day (d)
+(defun run (d)
   (let* ((package (or (package-for-day d)
                       (error "Not implemented")))
          (filename (format nil "../input/day~d.txt" d))
@@ -30,4 +30,4 @@
 (defun run-all ()
   (loop for d from 1 to 25 do
     (when (package-for-day d)
-      (run-day d))))
+      (run d))))
