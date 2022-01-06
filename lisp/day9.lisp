@@ -1,7 +1,7 @@
 (defpackage :day9
   (:use :cl :alexandria) 
   (:export :parse-input :part1 :part2)
-  (:shadowing-import-from :arrow-macros :->> ->))
+  (:shadowing-import-from :arrow-macros :-<> :<>))
 
 (in-package :day9)
 
@@ -61,6 +61,9 @@
 
 (defun part2 (m)
   "Calculate the product of the three largest basin sizes"
-  (let ((sizes (-> (basin-sizes m) (sort #'>) (subseq 0 3))))
-    (apply #'* sizes)))
+  (-<> m
+    (basin-sizes)
+    (sort #'>)
+    (subseq 0 3)
+    (apply #'* <>)))
 
