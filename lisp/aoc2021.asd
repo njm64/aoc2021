@@ -7,7 +7,8 @@
                :trivia
                :arrow-macros
                :cl-ppcre
-               :metabang-bind)
+               :metabang-bind
+               :cl-heap)
   :components (
                (:file "aoc")
                (:file "util")
@@ -24,4 +25,5 @@
                (:file "day11" :depends-on ("util"))
                (:file "day12" :depends-on ("util"))
                (:file "day13" :depends-on ("util"))
-               (:file "day14" :depends-on ("util"))))
+               (:file "day14" :depends-on ("util"))
+               (:file "day15" :depends-on ("util"))))
