@@ -59,9 +59,9 @@ let parse_input lines =
       { min = { x = x1; y = y1 }; max = { x = x2; y = y2 } })
 
 let part1 target =
-  let hit_count, _ = find_hits target in
-  hit_count
+  let max_height, _ = find_hits target in
+  max_height
 
 let part2 target =
-  let _, max_height = find_hits target in
-  max_height
+  let _, hit_count = find_hits target in
+  hit_count
