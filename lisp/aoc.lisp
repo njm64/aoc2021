@@ -1,11 +1,14 @@
 (defpackage :aoc
   (:use :cl)
-  (:export :run :run-all))
+  (:export :run :run-all :read-input))
 
 (in-package :aoc)
 
+(defun opt-package-for-day (d)
+  (find-package (format nil "DAY~d" d)))
+
 (defun package-for-day (d)
-  (or (find-package (format nil "DAY~d" d))
+  (or (opt-package-for-day d)
       (error "Not implemented")))
 
 (defun read-raw-input (d)
@@ -24,7 +27,7 @@
   (let* ((package (package-for-day d))
          (parse-input (or (find-symbol "PARSE-INPUT" package)
                           (error "Missing parse-input"))))
-    (funcall parse-input (read-input d))))
+    (funcall parse-input (read-raw-input d))))
 
 
 (defun run (d)
@@ -37,5 +40,5 @@
 
 (defun run-all ()
   (loop for d from 1 to 25 do
-    (when (package-for-day d)
+    (when (opt-package-for-day d)
       (run d))))
