@@ -5,7 +5,12 @@
 (in-package :aoc)
 
 (defun package-for-day (d)
-  (find-package (format nil "DAY~d" d)))
+  (or (find-package (format nil "DAY~d" d))
+      (error "Not implemented")))
+
+(defun read-raw-input (d)
+  (let ((filename (format nil "../input/day~d.txt" d)))
+    (uiop:read-file-lines filename)))
 
 (defun run-part (d p f input)
   (let* ((t1 (get-internal-run-time))
@@ -14,14 +19,17 @@
          (elapsed (/ (- t2 t1) internal-time-units-per-second)))
     (format t "Day ~2d Part ~d: ~20@<~d~> ~,6fs~%" d p result elapsed)))
 
-(defun run (d)
-  (let* ((package (or (package-for-day d)
-                      (error "Not implemented")))
-         (filename (format nil "../input/day~d.txt" d))
-         (lines (uiop:read-file-lines filename))
+
+(defun read-input (d)
+  (let* ((package (package-for-day d))
          (parse-input (or (find-symbol "PARSE-INPUT" package)
-                          (error "Missing parse-input")))
-         (input (funcall parse-input lines))
+                          (error "Missing parse-input"))))
+    (funcall parse-input (read-input d))))
+
+
+(defun run (d)
+  (let* ((package (package-for-day d))
+         (input (read-input d))
          (part1 (find-symbol "PART1" package))
          (part2 (find-symbol "PART2" package)))
     (when part1 (run-part d 1 part1 input))

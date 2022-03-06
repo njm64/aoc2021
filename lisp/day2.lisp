@@ -4,9 +4,12 @@
 
 (in-package :day2)
 
+(defun make-keyword (name)
+  (values (intern (string-upcase name) :keyword)))
+
 (defun parse-cmd (line)
   (let* ((tokens (str:words line))
-         (dir (util:make-keyword (first tokens)))
+         (dir (make-keyword (first tokens)))
          (amount (parse-integer (second tokens))))
     (list dir amount)))
 
