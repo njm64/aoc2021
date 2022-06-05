@@ -58,8 +58,12 @@
 (defun match-scalars (a b offset n)
   "Given two sorted lists of scalars, return true if we can
    find at least n matches, after applying the given offset to list b."
+  (declare (optimize (speed 3) (safety 0)))
+  (declare (type fixnum offset n))
   (loop while (and a b (plusp n)) do
-    (let ((diff (- (car a) (+ (car b) offset))))
+    (let ((diff (the fixnum (- (the fixnum (car a))
+                               (the fixnum (car b))
+                               offset))))
       (cond ((minusp diff) (setf a (cdr a)))
             ((plusp diff) (setf b (cdr b)))
             (t (decf n)
