@@ -105,7 +105,7 @@
       (if-let ((mappings (resolve-scanner resolved s)))
         (push (list s mappings) newly-resolved)
         (push s still-unresolved)))
-    (list newly-resolved still-unresolved)))
+    (values newly-resolved still-unresolved)))
 
 (defun resolve-all-scanners (scanners)
   "Main resolve loop. We keep track of three lists of scanners. Ones
@@ -116,7 +116,7 @@
         (unresolved (rest scanners))
         (resolved nil))
     (loop while unresolved do
-      (destructuring-bind (succeeded failed) (resolve-scanners newly-resolved unresolved)
+      (multiple-value-bind (succeeded failed) (resolve-scanners newly-resolved unresolved)
         (when (not succeeded)
           (error "Failed to resolve scanners"))
         (setf resolved (nconc resolved newly-resolved))

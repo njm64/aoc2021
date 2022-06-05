@@ -44,7 +44,7 @@
     ;; If the path is empty now, we're done
     (when p
       ;; Otherwise remove the left node from the end of the path
-      ;; and replace it with a right nodee
+      ;; and replace it with a right node
       (setf p (cons :R (rest p)))
       ;; Then we just need find the left-most tree node from this
       ;; point. Walk down the tree to the left, adding left nodes
