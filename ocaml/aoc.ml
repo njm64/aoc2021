@@ -57,7 +57,7 @@ let () =
   let days =
     try
       let s = Caml.Sys.argv.(1) in
-      if String.equal s "all" then List.range 1 25 else [ Int.of_string s ]
+      if String.equal s "all" then List.range 1 26 else [ Int.of_string s ]
     with _ ->
       printf "Usage: aoc <day_number | all>\n";
       Caml.exit 1
