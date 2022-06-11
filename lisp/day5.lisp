@@ -1,6 +1,6 @@
 (defpackage :day5
   (:use :cl) 
-  (:export :parse-input :part1 :part2]))
+  (:export :parse-input :part1 :part2))
 
 (in-package :day5)
 
