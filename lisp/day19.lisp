@@ -43,7 +43,7 @@
       (:negative-z (- z)))))
 
 (defun sorted-scalars (points axis)
-  (let ((scalars (mapcar #'(lambda (p) (point->scalar p axis)) points)))
+  (let ((scalars (mapcar (lambda (p) (point->scalar p axis)) points)))
     (sort scalars #'<)))
 
 (defun apply-mapping (p mapping)
@@ -128,7 +128,7 @@
   "Take a resolved scanner and return all points for this scanner
    with mappings applied."
   (destructuring-bind (points mappings) scanner
-    (mapcar #'(lambda (p) (apply-mappings p mappings)) points)))
+    (mapcar (lambda (p) (apply-mappings p mappings)) points)))
 
 (defun get-scanner-position (scanner)
   (destructuring-bind (points mappings) scanner

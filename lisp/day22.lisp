@@ -26,9 +26,9 @@
 
 (defun make-axis (cmds i)
   (-<>> cmds
-    (mapcar #'(lambda (cmd)
-                (let ((r (nth i (second cmd))))
-                  (list (car r) (cdr r)))))
+    (mapcar (lambda (cmd)
+              (let ((r (nth i (second cmd))))
+                (list (car r) (cdr r)))))
     (apply #'concatenate 'list)
     (sort <> #'<)
     (remove-duplicates)

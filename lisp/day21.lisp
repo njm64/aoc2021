@@ -53,7 +53,7 @@
   (destructuring-bind (u . count) universe
     (if (has-won u)
         (list universe)
-        (mapcar #'(lambda (n) (cons (update-universe u n) count))
+        (mapcar (lambda (n) (cons (update-universe u n) count))
                 dice-totals))))
 
 (defun count-wins (universes id)
@@ -76,7 +76,7 @@
 
 (defun part2 (input)
   (let ((universes (list (cons input 1))))
-    (loop until (every #'(lambda (u) (has-won (first u))) universes) do
+    (loop until (every (lambda (u) (has-won (first u))) universes) do
       (setf universes (->> universes
                         (mapcar #'universe-permutations)
                         (apply #'concatenate 'list)

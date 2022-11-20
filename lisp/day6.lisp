@@ -10,7 +10,7 @@
   (->> (first lines)
     (str:split #\,)
     (mapcar #'parse-integer)
-    (mapcar #'(lambda (n) (cons n 1)))))
+    (mapcar (lambda (n) (cons n 1)))))
 
 (defun count-fish (fish)
   (apply #'+ (mapcar #'cdr fish)))

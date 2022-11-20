@@ -39,9 +39,9 @@
     (t 0)))
 
 (defun autocomplete-score (toks)
-  (reduce #'(lambda (acc tok)
-              (+ (* acc 5)
-                 (autocomplete-token-score tok)))
+  (reduce (lambda (acc tok)
+            (+ (* acc 5)
+               (autocomplete-token-score tok)))
           toks :initial-value 0))
 
 (defun part1 (results)

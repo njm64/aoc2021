@@ -36,7 +36,7 @@
   (loop for r from *row-room-bottom* downto *row-room-top* collect r))
 
 (defun hallway-dsts ()
-  (mapcar #'(lambda (col) (cons 0 col))
+  (mapcar (lambda (col) (cons 0 col))
           (list 0 1 3 5 7 9 10)))
 
 (defun col-for-kind (kind)
@@ -90,22 +90,22 @@
 
 (defun is-path-clear (m path)
   "Return T is all positions in the given path are clear"
-  (every #'(lambda (pos) (is-pos-clear m pos)) path))
+  (every (lambda (pos) (is-pos-clear m pos)) path))
 
 (defun room-positions (kind)
   "Return a list of app positions in a room, ordered from bottom to top"
   (let ((col (col-for-kind kind)))
-    (mapcar #'(lambda (r) (cons r col)) (room-rows))))
+    (mapcar (lambda (r) (cons r col)) (room-rows))))
 
 (defun empty-room-position (m kind)
   "Find the first clear position in a room, from the bottom up"
-  (find-if #'(lambda (pos) (is-pos-clear m pos)) (room-positions kind)))
+  (find-if (lambda (pos) (is-pos-clear m pos)) (room-positions kind)))
 
 (defun strangers-in-room (m kind)
   "Return T if there are any strangers in the room for a kind"
-  (notevery #'(lambda (pos)
-                (or (is-pos-clear m pos)
-                    (equal (map-get m pos) kind)))
+  (notevery (lambda (pos)
+              (or (is-pos-clear m pos)
+                  (equal (map-get m pos) kind)))
             (room-positions kind)))
 
 (defun hpath (row src-col dst-col)
@@ -218,9 +218,9 @@
                      (list #\A (cons 3 *col-copper*))
                      (list #\A (cons 2 *col-desert*))
                      (list #\C (cons 3 *col-desert*))))
-        (mapped (mapcar #'(lambda (a)
-                            (destructuring-bind (kind (row . col)) a
-                              (if (= row 2) (list kind (cons 4 col)) a)))
+        (mapped (mapcar (lambda (a)
+                          (destructuring-bind (kind (row . col)) a
+                            (if (= row 2) (list kind (cons 4 col)) a)))
                         amphipods)))
     (nconc mapped extra)))
 

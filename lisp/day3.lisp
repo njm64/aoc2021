@@ -22,7 +22,7 @@
     (if (> c0 c1) #\1 #\0)))
 
 (defun filter-by-bit (lst i b)
-  (remove-if-not #'(lambda (n) (eql (elt n i) b)) lst))
+  (remove-if-not (lambda (n) (eql (elt n i) b)) lst))
 
 (defun bin->int (bits)
   (parse-integer (concatenate 'string bits) :radix 2))

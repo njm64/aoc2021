@@ -37,10 +37,10 @@
       (let ((visited (update-visited visited src)))
         (when (<= (count-duplicates visited) max-dups)
           (->> (gethash src graph)
-            (remove-if #'(lambda (c) (equal c "start")))
-            (mapcar #'(lambda (c) (find-paths graph c visited max-dups)))
+            (remove-if (lambda (c) (equal c "start")))
+            (mapcar (lambda (c) (find-paths graph c visited max-dups)))
             (apply #'concatenate 'list)
-            (mapcar #'(lambda (path) (cons src path))))))))
+            (mapcar (lambda (path) (cons src path))))))))
 
 (defun part1 (graph)
   (length (find-paths graph "start" nil 0)))

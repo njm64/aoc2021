@@ -6,7 +6,7 @@
 (in-package :day8)
 
 (defparameter *all-keys* nil)
-(map-permutations #'(lambda (p) (push p *all-keys*)) "abcdefg")
+(map-permutations (lambda (p) (push p *all-keys*)) "abcdefg")
 
 (defun parse-line (line)
   (->> line (str:split #\|) (mapcar #'str:words)))
@@ -55,10 +55,10 @@
    For each possible key, we try to decode the code, and then sort
    the decoded digits. If it matches '0123456789' then we have the
    correct key."
-  (find-if #'(lambda (k)
-               (-> (decode-codes k codes)
-                 (sort #'char-lessp)
-                 (equal "0123456789")))
+  (find-if (lambda (k)
+             (-> (decode-codes k codes)
+               (sort #'char-lessp)
+               (equal "0123456789")))
            *all-keys*))
 
 (defun decode-record (record)

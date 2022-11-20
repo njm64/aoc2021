@@ -48,7 +48,7 @@
    in the first pair only."
   (let* ((hd (first pair-frequencies))
          (counts (-<>> pair-frequencies
-                   (mapcar #'(lambda (pf) (cons (cdar pf) (cdr pf))))
+                   (mapcar (lambda (pf) (cons (cdar pf) (cdr pf))))
                    (cons (cons (caar hd) (cdr hd)))
                    (simplify-frequency-list)
                    (mapcar #'cdr)

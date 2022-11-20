@@ -29,7 +29,7 @@
 
 (defun fold-points (points fold)
   (-<>> points  
-    (mapcar #'(lambda (p) (fold-point p fold)))
+    (mapcar (lambda (p) (fold-point p fold)))
     (remove-duplicates <> :test #'equal)))
 
 (defun plot-points (points)

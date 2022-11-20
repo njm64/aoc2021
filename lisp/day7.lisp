@@ -29,5 +29,5 @@
 (defun part2 (crabs)
   "Part 2: Build a lookup table with fuel costs"
   (let ((fuel-table (make-fuel-table (apply #'max crabs))))
-    (calc-min-fuel crabs #'(lambda (n) (aref fuel-table n)))))
+    (calc-min-fuel crabs (lambda (n) (aref fuel-table n)))))
 
